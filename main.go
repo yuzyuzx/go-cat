@@ -41,9 +41,12 @@ func main() {
 
     // ファイルの内容を標準出力に表示
     scanner := bufio.NewScanner(file)
+    row := 1
     for scanner.Scan() {
-      fmt.Println(scanner.Text())
+      fmt.Println(row, scanner.Text())
+      row++
     }
+
     if err := scanner.Err(); err != nil {
       fmt.Fprintln(os.Stderr, "reading standard input:", err)
     }
