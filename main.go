@@ -25,7 +25,9 @@ import (
 
 func main() {
   files := []string{}
+  var isNumber bool
 
+  flag.BoolVar(&isNumber, "n", false, "行番号を表示する")
   flag.Parse()
 
   // 引数のファイルを取得する
@@ -43,8 +45,12 @@ func main() {
     scanner := bufio.NewScanner(file)
     row := 1
     for scanner.Scan() {
-      fmt.Println(row, scanner.Text())
-      row++
+      if(isNumber) {
+        fmt.Printf("%d ", row)
+        row++
+      }
+
+      fmt.Println(scanner.Text())
     }
 
     if err := scanner.Err(); err != nil {
