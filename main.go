@@ -24,36 +24,44 @@ import (
 )
 
 func main() {
-  files := []string{}
-  var isNumber bool
+  // 行番号表示を表示するかのフラグ変数
+  var isDisplayNumber bool
 
-  flag.BoolVar(&isNumber, "n", false, "行番号を表示する")
+  flag.BoolVar(&isDisplayNumber, "n", false, "行番号を表示する")
+
   flag.Parse()
 
   // 引数のファイルを取得する
   args := flag.Args()
-  for _, v := range args {
-    // TODO: ファイルが存在しない場合はエラー出力
-    files = append(files, v)
 
-    file, err := os.Open(v)
+  // ファイル数分ループする
+  for _, file := range args {
+
+    // 指定したファイルを読み込む
+    file, err := os.Open(file)
+
     if err != nil {
       log.Fatal(err)
     }
 
-    // ファイルの内容を標準出力に表示
+    // ファイルの内容を行ごとに読み込む
     scanner := bufio.NewScanner(file)
+    // 行番号
     row := 1
     for scanner.Scan() {
-      if(isNumber) {
-        fmt.Printf("%d ", row)
+      // 行番号表示オプションがあるか
+      if(isDisplayNumber) {
+        // 行番号を表示
+        fmt.Fprint(os.Stdout, row, " ")
         row++
       }
 
-      fmt.Println(scanner.Text())
+      fmt.Fprintln(os.Stdout, scanner.Text())
     }
 
+    // 正常にファイル終端に到達したか
     if err := scanner.Err(); err != nil {
+      // 到達していない
       fmt.Fprintln(os.Stderr, "reading standard input:", err)
     }
 
